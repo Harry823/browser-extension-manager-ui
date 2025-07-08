@@ -1,23 +1,30 @@
 'use client';
 
 import ExtensionItem from "@/components/ExtensionItem";
-import { SortType } from "@/types/enums/SortType";
 import { Extension } from "@/types/extension";
 import { useState } from "react";
 
+const SORT_TYPES = {
+    all: 'All',
+    active: 'Active',
+    inactive: 'Inactive'
+}
+
+type SortType = keyof typeof SORT_TYPES;
 type ExtensionListProps = {
     extensionData: Extension[]
 }
 
 const ExtensionList: React.FC<ExtensionListProps> = ({ extensionData }) => {
-    const [sortBy, setSortBy] = useState<SortType>(SortType.All);
+    const [sortBy, setSortBy] = useState<SortType>('all');
+    // WIP hook setExtensions to ExtensionItem component
     const [extensions, setExtensions] = useState<Extension[]>(extensionData)
 
     const shouldExtensionShow = (extensionItem: Extension) => {
         const extensionSortStatus = extensionItem.isActive
-            ? SortType.Active
-            : SortType.Inactive;
-        if (sortBy === SortType.All || sortBy === extensionSortStatus) {
+            ? 'active'
+            : 'inactive';
+        if (sortBy === 'all' || sortBy === extensionSortStatus) {
             return true;
         } else {
             return false;
@@ -29,19 +36,27 @@ const ExtensionList: React.FC<ExtensionListProps> = ({ extensionData }) => {
             <div className="mb-4 text-center flex flex-wrap justify-center md:justify-between">
                 <h1 className="text-3xl font-medium md:float-left">Extensions List</h1>
                 <div className="flex my-6 gap-2 justify-center md:float-right">
-                    {Object.keys(SortType).map((buttonType, index) =>
-                        <button
-                            key={index}
-                            onClick={() => setSortBy(SortType[buttonType as keyof typeof SortType])}>
-                            <div
-                            // WIP conditional styling on active sort button
-                            className={`inline rounded-3xl px-4 py-2 
-                                ${'bg-[hsl(225,_23%,_24%)] border border-[hsl(226,_11%,_37%)]'}`}
-                            style={{ backgroundColor: 'hsl(225, 23%, 24%)' }}
-                            >
-                                <span>{buttonType}</span>
-                            </div>
-                        </button>
+                    {Object.keys(SORT_TYPES).map((buttonType, index) => {
+                        const typedButtonType = buttonType as SortType
+                        return (
+                            <button
+                                key={index}
+                                onClick={() => setSortBy(typedButtonType)}>
+                                <div
+                                    className={`inline rounded-3xl px-4 py-2 
+                                        ${typedButtonType === sortBy
+                                            ? 'bg-[hsl(3,_86%,_64%)]'
+                                            : 'bg-[hsl(225,_23%,_24%)] border border-[hsl(226,_11%,_37%)]'}
+                                    `}
+                                >
+                                    <span
+                                        className={typedButtonType === sortBy ? 'text-[#040918]' : 'text-white'}>
+                                        {SORT_TYPES[typedButtonType]}
+                                    </span>
+                                </div>
+                            </button>
+                        )
+                    }
                     )}
                 </div>
             </div>
