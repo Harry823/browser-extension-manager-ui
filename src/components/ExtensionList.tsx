@@ -11,13 +11,12 @@ const SORT_TYPES = {
 }
 
 type SortType = keyof typeof SORT_TYPES;
-type ExtensionListProps = {
+interface ExtensionListProps {
     extensionData: Extension[]
 }
 
-const ExtensionList: React.FC<ExtensionListProps> = ({ extensionData }) => {
+const ExtensionList = ({ extensionData }: ExtensionListProps) => {
     const [sortBy, setSortBy] = useState<SortType>('all');
-    // WIP hook setExtensions to ExtensionItem component
     const [extensions, setExtensions] = useState<Extension[]>(extensionData)
 
     const shouldExtensionShow = (extensionItem: Extension) => {
@@ -64,7 +63,11 @@ const ExtensionList: React.FC<ExtensionListProps> = ({ extensionData }) => {
                 {extensions
                     .filter(shouldExtensionShow)
                     .map((extension, index) =>
-                    <ExtensionItem extensionData={extension} key={index} />
+                    <ExtensionItem
+                        extensionData={extension}
+                        key={index}
+                        updateExtensionState={setExtensions}
+                    />
                 )}
             </div>
         </div>

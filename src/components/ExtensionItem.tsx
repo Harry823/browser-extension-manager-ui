@@ -1,12 +1,14 @@
 import { Extension } from "@/types/extension";
 import Image from "next/image";
 
-type ExtensionItemProps = {
+interface ExtensionItemProps {
     extensionData: Extension;
-};
+    updateExtensionState: React.Dispatch<React.SetStateAction<Extension[]>>;
+}
 
-const ExtensionItem: React.FC<ExtensionItemProps> = ({ extensionData }) => {
+const ExtensionItem = ({ extensionData, updateExtensionState }: ExtensionItemProps) => {
     const imgPath = extensionData.logo.slice(1);
+
     return (
         <div
             className="flex flex-col justify-between max-w-xs h-[190px] rounded-xl px-4 py-4 border border-[hsl(226,_11%,_37%)]"
@@ -27,7 +29,13 @@ const ExtensionItem: React.FC<ExtensionItemProps> = ({ extensionData }) => {
                 </div>
             </div>
             <div className="flex justify-between">
-                <button>
+                <button
+                    onClick={() => 
+                        updateExtensionState(
+                            prev => prev.filter(ext => ext.name !== extensionData.name)
+                        )
+                    }
+                >
                     <div
                     className="rounded-3xl px-4 py-2 border border-[hsl(226,_11%,_37%)]"
                     style={{ backgroundColor: 'hsl(226, 25%, 17%)' }}
