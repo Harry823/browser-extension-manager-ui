@@ -1,5 +1,6 @@
 import { Extension } from "@/types/extension";
 import Image from "next/image";
+import ToggleActiveButton from "./ToggleActiveButton";
 
 interface ExtensionItemProps {
     extensionData: Extension;
@@ -32,17 +33,22 @@ const ExtensionItem = ({ extensionData, updateExtensionState }: ExtensionItemPro
                 <button
                     onClick={() => 
                         updateExtensionState(
-                            prev => prev.filter(ext => ext.name !== extensionData.name)
+                            prev => prev.filter(extension => extension.name !== extensionData.name)
                         )
                     }
                 >
                     <div
-                    className="rounded-3xl px-4 py-2 border border-[hsl(226,_11%,_37%)]"
+                    className="cursor-pointer rounded-3xl px-4 py-2 border border-[hsl(226,_11%,_37%)]"
                     style={{ backgroundColor: 'hsl(226, 25%, 17%)' }}
                     >
                         <span>Remove</span>
                     </div>
                 </button>
+                <ToggleActiveButton
+                    isActive={extensionData.isActive}
+                    extensionNameRef={extensionData.name}
+                    updateExtensionState={updateExtensionState}
+                />
             </div>
         </div>
     );
